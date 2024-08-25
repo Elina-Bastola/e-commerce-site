@@ -46,35 +46,27 @@ const ShopContextProvider = (props) => {
     }
     return totalCount;
   };
+  
   const updateQuantity = async (itemId, size, quantity) => {
     let cartData = structuredClone(cartItems);
     cartData[itemId][size] = quantity;
     setCartItems(cartData);
   };
-
-  const getCartAmount = () => {
-    let totalAmount = 0;
-    
-    for (const itemId in cartItems) {
-      // Find the product information using the product ID
-      const itemInfo = products.find((product) => Product._id === itemId);
-      
-      // Proceed only if the product was found
-      if (itemInfo) {
-        for (const size in cartItems[itemId]) {
-          if (cartItems[itemId][size] > 0) {
-            // Calculate the amount for the current item and add it to the total
-            totalAmount += itemInfo.price * cartItems[itemId][size];
+  
+const getCartAmount = async => {
+  let totalAmount = 0;
+    for (const items in cartItems) {
+      let itemInfo = products.find((Product)=> Product._id === items)
+      for (const item in cartItems[items]) {
+        try {
+          if (cartItems[items][item] > 0) {
+            totalAmount += itemInfo.price * cartItems[items][item];
           }
-        }
-      } else {
-        console.error(`Product with ID ${itemId} not found.`);
+        } catch (error) {}
       }
     }
-  
     return totalAmount;
-  };
-  
+};
   const value = {
     products,
     currency,
